@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 const getNewName = async (): Promise<string> => {
-	const names = await Bun.file('src/words/a-words.txt').text().then( text => text.split('\n'))
+	const names = await Bun.file('assets/omnibus.json', { type: 'application/type' }).json()
 	const random = Math.floor(Math.random() * names.length)
 	return Promise.resolve(names[random])
 }
