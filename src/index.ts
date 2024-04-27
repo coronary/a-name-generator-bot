@@ -10,10 +10,14 @@ const client = new Client({
 	]
 });
 
-const getNewName = async (): Promise<string> => {
-	const names = await Bun.file('assets/omnibus.json', { type: 'application/type' }).json()
-	const random = Math.floor(Math.random() * names.length)
-	return Promise.resolve(names[random])
+// TODO: replace with d.ts file in api folder
+interface NameResponse {
+	name: string;
+	ok: boolean;
+}
+
+const getNewName = async (): Promise<NameResponse> => {
+	return await fetch(`${process.env.API_URL}/getName`).then( res => res.json())
 }
 
 client.on('interactionCreate', async ( int ) => {
@@ -21,7 +25,7 @@ client.on('interactionCreate', async ( int ) => {
 		return
 	}
 	if(int.commandName === 'name') {
-		await getNewName().then( name => int.reply({content: name, ephemeral: true}))
+		await getNewName().then( ({ name }) => int.reply({content: name, ephemeral: true}))
 	}
 })
 
